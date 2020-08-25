@@ -37,7 +37,5 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: /serviceuser/data/dev/srvsaksbehandlervarsling-api
-        mountPath: /var/run/secrets/nais.io/service_user
       - kvPath: /kv/preprod/fss/saksbehandlervarsling-api/{{namespace}}
         mountPath: /var/run/secrets/nais.io/vault
