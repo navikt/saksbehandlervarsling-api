@@ -7,11 +7,10 @@ import java.time.LocalDateTime;
 
 @Data
 @Accessors(chain = true)
-public class Varsel {
+public class Varsling {
     long id;
-    String navn;
-    String tittel;
-    String beskrivelse;
-    LocalDateTime datoOpprettet;
-    String opprettetAv;
+    String saksbehandlerId;
+    long varselId;
+    boolean erLest;
+    LocalDateTime datoLest;
 }

@@ -13,8 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,7 +39,7 @@ public class SystemVarselControllerTest {
                 .setVarselNavn("navn")
                 .setBeskrivelse("beskrivelse")
                 .setTittel("tittel")
-                .setVeilederId("veilederId");
+                .setSaksbehandlerId("saksbehandlerId");
 
         mockMvc.perform(post("/api/system/varsel")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -50,11 +50,13 @@ public class SystemVarselControllerTest {
 
     @Test
     public void opprettVarsel_skal_opprette_varsel() throws Exception {
+        when(authService.getInnloggetBrukerSubject()).thenReturn("srvtest");
+
         SystemOpprettVarselDTO opprettVarselDTO = new SystemOpprettVarselDTO()
                 .setVarselNavn("navn")
                 .setBeskrivelse("beskrivelse")
                 .setTittel("tittel")
-                .setVeilederId("veilederId");
+                .setSaksbehandlerId("saksbehandlerId");
 
         mockMvc.perform(post("/api/system/varsel")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -62,13 +64,13 @@ public class SystemVarselControllerTest {
                 .andExpect(status().isNoContent());
 
         ArgumentCaptor<SystemOpprettVarselDTO> userCaptor = ArgumentCaptor.forClass(SystemOpprettVarselDTO.class);
-        verify(varselService, times(1)).opprettVarsel(userCaptor.capture());
+        verify(varselService, times(1)).opprettVarsel(anyString(), userCaptor.capture());
 
         SystemOpprettVarselDTO capturedVarselDTO = userCaptor.getValue();
         assertEquals(opprettVarselDTO.getVarselNavn(), capturedVarselDTO.getVarselNavn());
         assertEquals(opprettVarselDTO.getBeskrivelse(), capturedVarselDTO.getBeskrivelse());
         assertEquals(opprettVarselDTO.getTittel(), capturedVarselDTO.getTittel());
-        assertEquals(opprettVarselDTO.getVeilederId(), capturedVarselDTO.getVeilederId());
+        assertEquals(opprettVarselDTO.getSaksbehandlerId(), capturedVarselDTO.getSaksbehandlerId());
     }
 
     @Test
@@ -80,7 +82,7 @@ public class SystemVarselControllerTest {
                             .setVarselNavn("")
                             .setBeskrivelse("beskrivelse")
                             .setTittel("tittel")
-                            .setVeilederId("veilederId")
+                            .setSaksbehandlerId("saksbehandlerId")
                         )))
                 .andExpect(status().isBadRequest());
 
@@ -91,7 +93,7 @@ public class SystemVarselControllerTest {
                                 .setVarselNavn("navn")
                                 .setBeskrivelse(null)
                                 .setTittel("tittel")
-                                .setVeilederId("veilederId")
+                                .setSaksbehandlerId("saksbehandlerId")
                 )))
                 .andExpect(status().isBadRequest());
 
@@ -100,9 +102,9 @@ public class SystemVarselControllerTest {
                 .content(objectMapper.writeValueAsString(
                         new SystemOpprettVarselDTO()
                                 .setVarselNavn("navn")
-                                .setBeskrivelse("beskrivelse")
+                                .setBeskrivelse("saksbehandlerId")
                                 .setTittel("")
-                                .setVeilederId("veilederId")
+                                .setSaksbehandlerId("veilederId")
                 )))
                 .andExpect(status().isBadRequest());
 
@@ -114,7 +116,7 @@ public class SystemVarselControllerTest {
                                 .setVarselNavn("navn")
                                 .setBeskrivelse("beskrivelse")
                                 .setTittel("tittel")
-                                .setVeilederId("")
+                                .setSaksbehandlerId("")
                 )))
                 .andExpect(status().isBadRequest());
     }

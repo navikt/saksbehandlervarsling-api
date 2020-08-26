@@ -2,8 +2,8 @@ package no.nav.saksbehandlervarsling_api.service;
 
 import lombok.extern.slf4j.Slf4j;
 import no.nav.common.auth.subject.IdentType;
+import no.nav.common.auth.subject.Subject;
 import no.nav.common.auth.subject.SubjectHandler;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,6 +26,13 @@ public class AuthService {
 
     public void skalVereSystemBruker() {
         skalVere(IdentType.Systemressurs);
+    }
+
+    public String getInnloggetBrukerSubject() {
+        return SubjectHandler
+                .getSubject()
+                .map(Subject::getUid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Fant ikke subject"));
     }
 
     private void skalVere(IdentType forventetIdentType) {

@@ -29,7 +29,7 @@ public class SystemVarselController {
     @PostMapping
     public ResponseEntity opprettVarsel(@Valid @RequestBody SystemOpprettVarselDTO systemOpprettVarselDTO) {
         authService.skalVereSystemBruker();
-        varselService.opprettVarsel(systemOpprettVarselDTO);
+        varselService.opprettVarsel(authService.getInnloggetBrukerSubject(), systemOpprettVarselDTO);
         return ResponseEntity.noContent().build();
     }
 

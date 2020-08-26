@@ -19,5 +19,5 @@ public class SystemOpprettVarselDTO {
     String beskrivelse;
 
     @NotBlank
-    String veilederId;
+    String saksbehandlerId;
 }
